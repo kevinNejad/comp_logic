@@ -4,17 +4,58 @@ import re
 import string
 
 from enum import Enum
+from flair.data import Sentence
+from flair.models import SequenceTagger
 from nltk.stem import WordNetLemmatizer
 
 from prolexa import PACKAGE_PATH, PROLOG_PATH
-
-from meta_knowledge import add_new_rules, fetch_standard_input
-from utils import Tagger, POS, standardise_tags
 
 PROLOG_DET_REGEX = r'determiner\([a-z],X=>B,X=>H,\[\(H:-B\)\]\)(.*)'
 PROLOG_DET = 'determiner(p,X=>B,X=>H,[(H:-B)]) --> [{}].\n'
 
 # PartsOfSpeech
+# https://www.ling.upenn.edu/courses/Fall_2003/ling001/penn_treebank_pos.html
+class POS(Enum):
+    DETERMINER = 'DT'
+    ADVERB = 'RB'
+    PROPNOUN = 'NNP'
+    PROPNOUN_2 = 'PROPN'
+    NOUN = 'NN'
+    VERB = 'VB'
+    ADJECTIVE = 'JJ'
+    PREPOSITION = 'IN'
+    COORD = 'CC'
+    CARDINAL = 'CD'
+    EXISTENTIAL = 'EX'
+    FOREIGN = 'FW'
+    LISTITEM = 'LS'
+    MODAL = 'MD'
+    PREDET = 'PDT'
+    POSSESS = 'POS'
+    PRONOUN = 'PRP'
+    POSSPRONOUN = 'PRP$'
+    PARTICLE = 'RP'
+    SYMBOL = 'SYM'
+    TO = 'TO'
+    INTERJECTION = 'UH'
+    WHDET = 'WDT'
+    WHPRONOUN = 'WP'
+    WHADVERB = 'WRB'
+
+class Tagger():
+    def __init__(self):
+        self.tagger = SequenceTagger.load('pos')
+
+    def tag(self, text):
+        sentence = Sentence(text)
+
+        # predict POS tags
+        self.tagger.predict(sentence)
+        tagged_sent = sentence.to_tagged_string()
+        tags = re.findall(re.escape('<') + '(.*?)' + re.escape('>'),
+                          tagged_sent)
+
+        return tagged_sent, sentence.to_plain_string(), tags
 
 tagger = Tagger()
 
@@ -51,7 +92,6 @@ def write_new_prolexa(path, lines):
                       'consult(knowledge_store)')
         f.write(l)
 
-
 def escape_and_call_prolexa(pl, text):
     update_rules(tagger, text)
     #update_knowledge_store(pl)
@@ -86,9 +126,25 @@ def standardised_query(pl, text):
     text = remove_punctuation(text)
     text = contractions.fix(text)
     text = lemmatise(text)
-    fetch_standard_input(pl, text)
     return escape_and_call_prolexa(pl, text)
 
+# for queries, not knowledge loading
+def standardise_tags(tags):
+    std = []
+    for tag in tags:
+        if POS.DETERMINER.value in tag:
+            std.append( POS.DETERMINER.value)
+        elif POS.VERB.value in tag:
+            std.append( POS.VERB.value)
+        elif POS.ADVERB.value in tag:
+            std.append( POS.ADVERB.value)
+        elif POS.ADJECTIVE.value in tag:
+            std.append( POS.ADJECTIVE.value)
+        elif POS.NOUN.value in tag and tag != POS.PROPNOUN.value:
+            std.append( POS.NOUN.value)
+        else:
+            std.append(tag)
+    return std
 
 def get_tags(tagger, text):
     _, _, tags = tagger.tag(text)
@@ -142,9 +198,6 @@ def handle_noun(lines, i, text, tags):
         if new_line == '':
             new_line = 'pred(' + input_word + ', 1,[n/' + input_word + ']).\n'
         lines.insert(noun_idx, new_line)
-        
-        # add new rules associated with the noun
-        add_new_rules(input_word, POS.NOUN)
 
     return lines
 

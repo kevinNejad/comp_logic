@@ -9,7 +9,6 @@ from pyswip import Prolog
 # warnings.filterwarnings("ignore")
 
 import prolexa.meta_grammar as meta
-
 pl = Prolog()
 
 class ProlexaPlus(Cmd):
