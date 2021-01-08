@@ -126,6 +126,7 @@ def get_complex_tag(label):
     # Return the patter that the label follows *EXACTLY*
     tag_text = exact_match({"NN": noun_reg_check,"JJ": adj_reg_check ,"VB": verb_reg_check,"CNP":CNP_reg_check,
         "CVP": CVP_reg_check}, label)
+    tag_text = remove_determiner(tag_text)
     return tag_text
 
 
@@ -150,6 +151,11 @@ def extract_pos_regex(text_doc ,pattern):
             filtered_matches.append(match)
     return sorted(filtered_matches, key=lambda m: m.start)
 
+def remove_determiner(tag_text):
+    tag, text = tag_text
+    if tag and text:
+        text = re.sub('(a|an|and|the)(\s+)', '', text)
+    return (tag, text)
 
 def remove_punctuation(s):
     return s.translate(str.maketrans('', '', string.punctuation))

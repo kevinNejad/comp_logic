@@ -114,13 +114,10 @@ def update_knowledge(tagger, target, property_, description):
 
         # get common_sense and update rules
         common_sense_knowledge = fetch_word_info(property_, RELATIONS)
-        print('common sense has fetch!')
         
         lines_knowledge_store = get_prolog_grammar(PACKAGE_PATH, 'knowledge_store.pl')
-        print('grammar lines was loaded!')
         
         lines_prolexa_rules = get_prolog_rule(PACKAGE_PATH, 'prolexa.pl')
-        print('prolexa rules was loaded!')
 
         add_rules_knowledge(target, property_,
                 common_sense_knowledge,lines_knowledge_store,
@@ -136,7 +133,7 @@ def add_rules_knowledge(target, property_, common_sense_knowledge,
             for label in data:
                 #print('label: ', label)
                 complex_tag, content = get_complex_tag(label)
-                knowledge_store_updated, prolexa_rules_updated = generate_rule_knowledge(complex_tag, content, target,
+                knowledge_store_updated, prolexa_rules_updated = generate_rule_knowledge(complex_tag, content, property_,
                         lines_knowledge_store, lines_prolexa_rules)
                 if knowledge_store_updated:
                     write_new_grammar(PACKAGE_PATH, knowledge_store_updated)
@@ -149,17 +146,16 @@ def add_rules_knowledge(target, property_, common_sense_knowledge,
             # add rule accordingly
 
 
-def generate_rule_knowledge(complex_tag, content, target,
+def generate_rule_knowledge(complex_tag, content, property_,
         lines_knowledge_store, lines_prolexa_rules):
-    print('Complex_tag: -> ', complex_tag)
     if complex_tag == CHUNK.NN.value:
         knowledge_updated = handle_noun_knowledge(lines_knowledge_store,content, complex_tag)
-        rule_updated = handle_noun_rule(target, content, lines_prolexa_rules)
+        rule_updated = handle_noun_rule(property_, content, lines_prolexa_rules)
         return knowledge_updated, rule_updated
     
     elif complex_tag == CHUNK.JJ.value:
         knowledge_updated = handle_adj_knowledge(lines_knowledge_store,content, complex_tag)
-        rule_updated = handle_adj_rule(target, content, lines_prolexa_rules)
+        rule_updated = handle_adj_rule(property_, content, lines_prolexa_rules)
         return knowledge_updated, rule_updated
     
     elif complex_tag == CHUNK.VB.value:
@@ -216,6 +212,7 @@ def handle_noun_knowledge(lines, property_, complex_tag):
         pred_match = r'pred\((.*)[1],\[(.*)\]\)\.'
         if re.match(pred_match, line):
             i = idx
+            break
     lines_updated = handle_noun(lines, i, text, tags)
     return lines_updated
 
