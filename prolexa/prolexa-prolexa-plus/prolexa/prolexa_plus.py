@@ -9,6 +9,7 @@ from pyswip import Prolog
 # warnings.filterwarnings("ignore")
 
 import prolexa.meta_grammar as meta
+import prolexa.common_sense as cs
 pl = Prolog()
 
 class ProlexaPlus(Cmd):
@@ -18,7 +19,9 @@ class ProlexaPlus(Cmd):
 
     def default(self, input_):
         first_answer = meta.standardised_query(pl, input_)[0]['Output']
+        message = cs.standardised_query(pl, input_)
         print(first_answer)
+        print(message)
 
 def prolexa_plus_repl():
     meta.reset_grammar()

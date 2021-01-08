@@ -1,15 +1,13 @@
 import contractions
 import os
 import re
-import string
 
 from enum import Enum
-from nltk.stem import WordNetLemmatizer
 
 from prolexa import PACKAGE_PATH, PROLOG_PATH
 
-from meta_knowledge import add_new_rules, fetch_standard_input
-from utils import Tagger, POS, standardise_tags
+#from common_sense import add_rules, fetch_standard_input
+from utils import Tagger, POS, standardise_tags, remove_punctuation, lemmatise,is_plural
 
 PROLOG_DET_REGEX = r'determiner\([a-z],X=>B,X=>H,\[\(H:-B\)\]\)(.*)'
 PROLOG_DET = 'determiner(p,X=>B,X=>H,[(H:-B)]) --> [{}].\n'
@@ -61,14 +59,6 @@ def escape_and_call_prolexa(pl, text):
     generator = pl.query(libPrefix + handle_utterance_str(text))
     return list(generator)
 
-def lemmatise(word):
-    wnl = WordNetLemmatizer()
-    return wnl.lemmatize(word, 'n')
-
-def is_plural(word):
-    lemma = lemmatise(word)
-    plural = True if word is not lemma else False
-    return plural, lemma
 
 def handle_utterance_str(text):
     if text[0] != "'" and text[0] != '"' :
@@ -79,20 +69,19 @@ def handle_utterance_str(text):
 
     return 'handle_utterance(1,{},Output)'.format(text)
 
-def remove_punctuation(s):
-    return s.translate(str.maketrans('', '', string.punctuation))
 
 def standardised_query(pl, text):
     text = remove_punctuation(text)
     text = contractions.fix(text)
     text = lemmatise(text)
-    fetch_standard_input(pl, text)
+    #fetch_standard_input(pl, text)
     return escape_and_call_prolexa(pl, text)
 
 
 def get_tags(tagger, text):
     _, _, tags = tagger.tag(text)
     tags = standardise_tags(tags)
+    print('TAGS: ', tags)
     return tags
 
 def handle_noun(lines, i, text, tags):
@@ -143,8 +132,6 @@ def handle_noun(lines, i, text, tags):
             new_line = 'pred(' + input_word + ', 1,[n/' + input_word + ']).\n'
         lines.insert(noun_idx, new_line)
         
-        # add new rules associated with the noun
-        add_new_rules(input_word, POS.NOUN)
 
     return lines
 

@@ -61,8 +61,11 @@ verb_phrase(s,M) --> [is],property(s,M).
 verb_phrase(p,M) --> [are],property(p,M).
 verb_phrase(N,M) --> iverb(N,M).
 
+
+
 property(N,M) --> adjective(N,M).
 property(s,M) --> [a],noun(s,M).
+property(s,M) --> [an],noun(s,M).
 property(p,M) --> noun(p,M).
 
 determiner(s,X=>B,X=>H,[(H:-B)]) --> [every].

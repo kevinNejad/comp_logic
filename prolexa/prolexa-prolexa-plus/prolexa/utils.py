@@ -2,6 +2,10 @@ import re
 from flair.data import Sentence
 from flair.models import SequenceTagger
 
+from nltk.stem import WordNetLemmatizer
+
+import string
+
 import os
 
 
@@ -57,6 +61,7 @@ class CHUNK(Enum):
 
     CNP='CNP' # Custom/Complex Noun Phrase
     CVP='CVP' # Custom/Complex Verb Phrase
+    TEST='THIS IS A TEST'
 
 class Tagger():
     def __init__(self):
@@ -100,24 +105,26 @@ def get_complex_tag(label):
     #VB_pattern = r''
 
     CNP_pattern=[
-            {"POS":"DET","OP":"?"},{"POS":"ADJ","OP":"?"},{"POS":"NOUN","OP":"$"},
+            {"POS":"DET","OP":"?"},{"POS":"ADJ","OP":"?"},{"POS":"NOUN"},
             {"POS":"ADP","OP":"?"},{"POS":"DET","OP":"?"},{"POS":"ADJ","OP":"?"},
             {"POS":"NOUN","OP":"?"}]
     #CNP_pattern = r'(<DET>?<ADJ>?<NOUN><ADP>?<DET>?<ADJ>?<NOUN>?)'
     #CVP_patttern = r''
 
-    spacy_doc = textacy.make_spacy_doc((text),
+    spacy_doc = textacy.make_spacy_doc((label),
                                         lang='en_core_web_sm')
 
     noun_reg_check = extract_pos_regex(spacy_doc, NN_pattern)
     verb_reg_check = None
 
     CNP_reg_check = extract_pos_regex(spacy_doc, CNP_pattern)
-    CVP_reg_check = extract_pos_regex(spacy_doc, CVP_pattern)
+    CVP_reg_check = None
 
     # Return the patter that the label follows *EXACTLY*
-    text_tag = exact_match({"NN": noun_reg_check, "VB": verb_reg_check,"CNP":CNP_reg_check,
-        "CVP": CVP_reg_check}, text)
+    tag_text = exact_match({"NN": noun_reg_check, "VB": verb_reg_check,"CNP":CNP_reg_check,
+        "CVP": CVP_reg_check}, label)
+    return tag_text
+
 
 def exact_match(match_dict, text):
     for chunk, matches in match_dict.items():
@@ -128,8 +135,7 @@ def exact_match(match_dict, text):
         return (None, None)
 
 def extract_pos_regex(text_doc ,pattern):
-    matches_ = list(textacy.extract.matches(nlp_t, verb_pattern))
-    matches_
+    matches_ = list(textacy.extract.matches(text_doc, pattern))
     seen_se = set()
     filtered_matches = []
     for match in sorted(matches_, key=len, reverse=True):
@@ -140,3 +146,20 @@ def extract_pos_regex(text_doc ,pattern):
             seen_se.add((s, e))
             filtered_matches.append(match)
     return sorted(filtered_matches, key=lambda m: m.start)
+
+
+
+
+def remove_punctuation(s):
+    return s.translate(str.maketrans('', '', string.punctuation))
+
+
+
+def lemmatise(word):
+    wnl = WordNetLemmatizer()
+    return wnl.lemmatize(word, 'n')
+
+def is_plural(word):
+    lemma = lemmatise(word)
+    plural = True if word is not lemma else False
+    return plural, lemma

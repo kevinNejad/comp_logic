@@ -19,10 +19,9 @@ iverb(p,M)			--> [Verb],   {pred2gr(_P,1,v/Verb,M)}.
 pred(human,   1,[a/human,n/human]).
 pred(mortal,  1,[a/mortal,n/mortal]).
 pred(is, 1,[v/is]).
-pred(person, 1,[n/person]).
-pred(animal, 1,[n/animal]).
+pred(teacher, 1,[n/teacher]).
 pred(peter, 1,[n/peter]).
-pred(explain, 1,[v/explain]).
+pred(tell, 1,[v/tell]).
 %pred(man,     1,[a/male,n/man]).
 %pred(woman,   1,[a/female,n/woman]).
 %pred(married, 1,[a/married]).
@@ -33,6 +32,9 @@ pred(bird,    1,[n/bird]).
 pred(penguin, 1,[n/penguin]).
 pred(sparrow, 1,[n/sparrow]).
 pred(fly,     1,[v/fly]).
+pred(abstraction, 1,[n/abstraction]).
+pred(educator, 1,[n/educator]).
+pred(person, 1,[n/person]).
 
 pred2gr(P,1,C/W,X=>Lit):-
 	pred(P,1,L),
@@ -66,8 +68,11 @@ verb_phrase(s,M) --> [is],property(s,M).
 verb_phrase(p,M) --> [are],property(p,M).
 verb_phrase(N,M) --> iverb(N,M).
 
+
+
 property(N,M) --> adjective(N,M).
 property(s,M) --> [a],noun(s,M).
+property(s,M) --> [an],noun(s,M).
 property(p,M) --> noun(p,M).
 
 determiner(s,X=>B,X=>H,[(H:-B)]) --> [every].
