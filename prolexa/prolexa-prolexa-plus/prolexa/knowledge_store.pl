@@ -20,8 +20,6 @@ pred(human,   1,[a/human,n/human]).
 pred(mortal,  1,[a/mortal,n/mortal]).
 pred(is, 1,[v/is]).
 pred(teacher, 1,[n/teacher]).
-pred(peter, 1,[n/peter]).
-pred(tell, 1,[v/tell]).
 %pred(man,     1,[a/male,n/man]).
 %pred(woman,   1,[a/female,n/woman]).
 %pred(married, 1,[a/married]).

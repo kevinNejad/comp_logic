@@ -173,14 +173,20 @@ def generate_rule_knowledge(complex_tag, content, target,
     return None, None
 
 def handle_noun_rule(target, property_, lines): 
-    rule = 'stored_rule(1,[('+property_+'(X):-'+target+'(X))]).\n'
+    rule = 'stored_rule(1,[('+property_+'(X):-'+target+'(X))]).'
+    
+    rule_reg = r'stored_rule\(1,\[\({}\(X\):-{}\(X\)\)\]\).'.format(property_,
+            target)
     i  = len(lines)
     rule_match = r'stored_rule\(1,\[\((.*)\(X\):-(.*)\(X\)\)\]\).'
     for idx, line in enumerate(iter(lines)):
+        if re.match(rule_reg, line):
+            return lines
+        
         if re.match(rule_match, line):
             i = idx
 
-    lines.insert(i, rule)
+    lines.insert(i+1, rule+'\n')
     
     return lines
 
