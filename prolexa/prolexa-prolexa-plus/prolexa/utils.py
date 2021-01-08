@@ -54,6 +54,7 @@ class POS(Enum):
 
 class CHUNK(Enum):
     NN='NN' # Noun
+    JJ='JJ' # Adjective
     VB='VB' # Verb
 
     NP='NP' # Noun Phrase
@@ -101,6 +102,7 @@ def standardise_tags(tags):
 def get_complex_tag(label):
     # Grammar patterns regex
     NN_pattern=[{'POS':"DET","OP":"?"},{'POS':"NOUN"}]
+    JJ_pattern=[{'POS':"DET","OP":"?"},{'POS':"ADJ"}]
     #NN_pattern = r'(<DET>?<NOUN>)'
     #VB_pattern = r''
 
@@ -115,13 +117,14 @@ def get_complex_tag(label):
                                         lang='en_core_web_sm')
 
     noun_reg_check = extract_pos_regex(spacy_doc, NN_pattern)
-    verb_reg_check = None
+    adj_reg_check = extract_pos_regex(spacy_doc, JJ_pattern)
+    verb_reg_check = []
 
     CNP_reg_check = extract_pos_regex(spacy_doc, CNP_pattern)
-    CVP_reg_check = None
+    CVP_reg_check = []
 
     # Return the patter that the label follows *EXACTLY*
-    tag_text = exact_match({"NN": noun_reg_check, "VB": verb_reg_check,"CNP":CNP_reg_check,
+    tag_text = exact_match({"NN": noun_reg_check,"JJ": adj_reg_check ,"VB": verb_reg_check,"CNP":CNP_reg_check,
         "CVP": CVP_reg_check}, label)
     return tag_text
 
@@ -132,7 +135,7 @@ def exact_match(match_dict, text):
             if matches[0].text.strip()==text.strip():
                 return (chunk, text)
 
-        return (None, None)
+    return (None, None)
 
 def extract_pos_regex(text_doc ,pattern):
     matches_ = list(textacy.extract.matches(text_doc, pattern))
@@ -148,11 +151,8 @@ def extract_pos_regex(text_doc ,pattern):
     return sorted(filtered_matches, key=lambda m: m.start)
 
 
-
-
 def remove_punctuation(s):
     return s.translate(str.maketrans('', '', string.punctuation))
-
 
 
 def lemmatise(word):

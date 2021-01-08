@@ -20,6 +20,8 @@ pred(human,   1,[a/human,n/human]).
 pred(mortal,  1,[a/mortal,n/mortal]).
 pred(is, 1,[v/is]).
 pred(teacher, 1,[n/teacher]).
+pred(peter, 1,[n/peter]).
+pred(tell, 1,[v/tell]).
 %pred(man,     1,[a/male,n/man]).
 %pred(woman,   1,[a/female,n/woman]).
 %pred(married, 1,[a/married]).
@@ -33,6 +35,7 @@ pred(fly,     1,[v/fly]).
 pred(abstraction, 1,[n/abstraction]).
 pred(educator, 1,[n/educator]).
 pred(person, 1,[n/person]).
+pred(academic, 1,[a/academic]).
 
 pred2gr(P,1,C/W,X=>Lit):-
 	pred(P,1,L),

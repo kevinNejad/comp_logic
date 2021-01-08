@@ -23,6 +23,7 @@ stored_rule(1,[(mortal(X):-human(X))]).
 stored_rule(1,[(abstraction(X):-human(X))]).
 stored_rule(1,[(educator(X):-human(X))]).
 stored_rule(1,[(person(X):-human(X))]).
+stored_rule(1,[(academic(X):-human(X))]).
 stored_rule(1,[(human(peter):-true)]).
 
 

@@ -69,9 +69,7 @@ def standardised_query(pl, text):
     text = remove_punctuation(text)
     text = contractions.fix(text)
     text = lemmatise(text)
-    print('TEXT: ', text)
     message = fetch_common_sense_knowledge(pl, text)
-    #return escape_and_call_prolexa(pl, text)
     return message
 
 def fetch_common_sense_knowledge(pl, input_):
@@ -90,8 +88,8 @@ def get_target_property(input_):
         is_are = re.findall(target_regex, input_)[0][1]
         target = re.findall(target_regex, input_)[0][0]
         property_ = re.findall(property_regex, input_)[0][-1]
-        print('TARGET: ', target)
-        print("LABEL: ", property_)
+        #print('TARGET: ', target)
+        #print("LABEL: ", property_)
         description = target+' '+is_are+' '+property_
         return(target, property_, description)
 
@@ -105,37 +103,38 @@ def get_tags(tagger,text):
 def get_property_pos(target, property_, description):
     tags = get_tags(tagger, description)
     words_tags = dict(zip(description.split(' '), tags))
-    print('WORD_TAGS: ', words_tags)
+    #print('WORD_TAGS: ', words_tags)
     return words_tags
     
 def update_knowledge(tagger, target, property_, description):
     # CHECK IF THE PROPERTY IS NOUN
     words_tags = get_property_pos(target, property_, description)
-    print('P: ', property_, '--',words_tags[property_], 'POS: ', POS.NOUN.value,
-            CHUNK.TEST.value)
     if words_tags[property_] == POS.NOUN.value:
         print('Acquiring common sense knowledge ...')
+
         # get common_sense and update rules
         common_sense_knowledge = fetch_word_info(property_, RELATIONS)
-        print('common sense has fetch: ', common_sense_knowledge)
+        print('common sense has fetch!')
+        
         lines_knowledge_store = get_prolog_grammar(PACKAGE_PATH, 'knowledge_store.pl')
-        print('grammar lines was loaded ')
+        print('grammar lines was loaded!')
+        
         lines_prolexa_rules = get_prolog_rule(PACKAGE_PATH, 'prolexa.pl')
-        print('prolexa rules was loaded ')
+        print('prolexa rules was loaded!')
 
         add_rules_knowledge(target, property_,
                 common_sense_knowledge,lines_knowledge_store,
                 lines_prolexa_rules)
-        print('rules were added')
-        
+        print('Rules were added successfully!')
+      
 def add_rules_knowledge(target, property_, common_sense_knowledge,
         lines_knowledge_store, lines_prolexa_rules):
     for rel, data in common_sense_knowledge.items():
-        print('REL: ', rel)
+        #print('REL: ', rel)
         if rel == REL.IS_A.value:
-            print('IS_A relation')
+            #print('IS_A relation')
             for label in data:
-                print('label: ', label)
+                #print('label: ', label)
                 complex_tag, content = get_complex_tag(label)
                 knowledge_store_updated, prolexa_rules_updated = generate_rule_knowledge(complex_tag, content, target,
                         lines_knowledge_store, lines_prolexa_rules)
@@ -152,10 +151,15 @@ def add_rules_knowledge(target, property_, common_sense_knowledge,
 
 def generate_rule_knowledge(complex_tag, content, target,
         lines_knowledge_store, lines_prolexa_rules):
-    
+    print('Complex_tag: -> ', complex_tag)
     if complex_tag == CHUNK.NN.value:
         knowledge_updated = handle_noun_knowledge(lines_knowledge_store,content, complex_tag)
         rule_updated = handle_noun_rule(target, content, lines_prolexa_rules)
+        return knowledge_updated, rule_updated
+    
+    elif complex_tag == CHUNK.JJ.value:
+        knowledge_updated = handle_adj_knowledge(lines_knowledge_store,content, complex_tag)
+        rule_updated = handle_adj_rule(target, content, lines_prolexa_rules)
         return knowledge_updated, rule_updated
     
     elif complex_tag == CHUNK.VB.value:
@@ -174,7 +178,6 @@ def generate_rule_knowledge(complex_tag, content, target,
 
 def handle_noun_rule(target, property_, lines): 
     rule = 'stored_rule(1,[('+property_+'(X):-'+target+'(X))]).'
-    
     rule_reg = r'stored_rule\(1,\[\({}\(X\):-{}\(X\)\)\]\).'.format(property_,
             target)
     i  = len(lines)
@@ -187,7 +190,21 @@ def handle_noun_rule(target, property_, lines):
             i = idx
 
     lines.insert(i+1, rule+'\n')
-    
+    return lines
+
+def handle_adj_rule(target, property_, lines): 
+    rule = 'stored_rule(1,[('+property_+'(X):-'+target+'(X))]).'
+    rule_reg = r'stored_rule\(1,\[\({}\(X\):-{}\(X\)\)\]\).'.format(property_,
+            target)
+    i  = len(lines)
+    rule_match = r'stored_rule\(1,\[\((.*)\(X\):-(.*)\(X\)\)\]\).'
+    for idx, line in enumerate(iter(lines)):
+        if re.match(rule_reg, line):
+            return lines
+        
+        if re.match(rule_match, line):
+            i = idx
+    lines.insert(i+1, rule+'\n')
     return lines
 
 def handle_noun_knowledge(lines, property_, complex_tag):
@@ -201,6 +218,20 @@ def handle_noun_knowledge(lines, property_, complex_tag):
             i = idx
     lines_updated = handle_noun(lines, i, text, tags)
     return lines_updated
+
+
+def handle_adj_knowledge(lines, property_, complex_tag):
+    text = [property_]
+    tags = [complex_tag]
+    
+    i = len(lines)
+    for idx, line in enumerate(iter(lines)):
+        pred_match = r'pred\((.*)[1],\[(.*)\]\)\.'
+        if re.match(pred_match, line):
+            i = idx
+    lines_updated = handle_adjective(lines, i, text, tags)
+    return lines_updated
+
 
 def handle_noun(lines, i, text, tags):
     nn = POS.NOUN.value
@@ -253,6 +284,55 @@ def handle_noun(lines, i, text, tags):
 
     return lines
 
+
+def handle_adjective(lines, i, text, tags):
+    a = POS.ADJECTIVE.value
+    start = 'pred('
+    end = ', '
+    exists = False
+    new_line = ''
+    input_word = text[tags.index(a)]
+    _, input_word = is_plural(input_word)
+    text[tags.index(a)] = input_word
+
+    for noun_idx, noun_line in enumerate(lines[i:]):
+        if not(re.match(r'pred\((.*)[1],\[(.*)\]\)\.', noun_line)):
+            noun_idx = noun_idx + i
+            if tags:
+                tags.remove('JJ')
+            if text:
+                text.remove(input_word)
+            break
+        line_word = (noun_line.split(start))[1].split(end)[0]
+        if input_word == line_word:
+            if (re.match(r'pred\((.*)[1](.*)a\/(.*)\]\)\.', noun_line)):
+                exists = True
+                if tags:
+                    tags.remove(a)
+                if text:
+                    text.remove(input_word)
+                break
+            else:
+                noun_idx = noun_idx + i
+                insert_idx = noun_line.index(']).')
+                new_line = (noun_line[:insert_idx]
+                            + ',a/'
+                            + input_word
+                            + noun_line[insert_idx:])
+                lines[noun_idx] = new_line
+                exists = True
+                if tags:
+                    tags.remove(a)
+                if text:
+                    text.remove(input_word)
+                break
+
+    if not exists:
+        if new_line == '':
+            new_line = 'pred(' + input_word + ', 1,[a/' + input_word + ']).\n'
+        lines.insert(noun_idx, new_line)
+
+    return lines
 
 
 
