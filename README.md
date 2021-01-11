@@ -4,6 +4,7 @@ When a user inserts a statement, prolexa communicates with the external database
 
 
 The new functionality can be used to address the type of questions and riddles posed in Option 1 of this coursework. For example: 
+
 If someone is medic then they can care
 
 if someone is a doctor then they are a worker
@@ -18,4 +19,4 @@ Bill is a doctor?
 
 (This can be shown via demonstration).
 
-While prolexa can handle any rule with the prefix "is a type of...", it was necessary to also extend its grammar to permit it to take advantage of all knowledge provided by Conceptnet. For example, prolexa should hanle such as "every doctor has a hammer" and "every teacher is is capable of teaching". Prolexa now understands such statements, however the complexity of the responses stored in conceptnet hinders its ability to fully process them and return reasoned responses. Thus, future work should insert more complex structures into Prolexa's grammer to ensure access to the entire knowledge database. 
+While prolexa can handle any rule with the prefix "is a type of...", it was necessary to also extend its grammar to permit it to take advantage of all knowledge provided by Conceptnet. For example, prolexa should handle such statements as "every doctor has a hammer" and "every teacher is is capable of teaching". Prolexa now understands such statements, however the complexity of the responses stored in conceptnet hinders its ability to fully process them and return reasoned responses. Thus, future work should insert more complex structures into Prolexa's grammer to ensure access to the entire knowledge database. 
