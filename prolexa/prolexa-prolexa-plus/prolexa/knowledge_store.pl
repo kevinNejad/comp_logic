@@ -19,14 +19,13 @@ iverb(p,M)			--> [Verb],   {pred2gr(_P,1,v/Verb,M)}.
 pred(human,   1,[a/human,n/human]).
 pred(mortal,  1,[a/mortal,n/mortal]).
 pred(peter, 1,[n/peter]).
-pred(is, 1,[v/is]).
-pred(doctor, 1,[n/doctor]).
-pred(play, 1,[n/play]).
-pred(scholar, 1,[n/scholar]).
-pred(worker, 1,[n/worker]).
-pred(professional, 1,[n/professional]).
-pred(person, 1,[n/person]).
 pred(tell, 1,[v/tell]).
+pred(teacher, 1,[n/teacher]).
+pred(is, 1,[v/is]).
+pred(abstraction, 1,[n/abstraction]).
+pred(educator, 1,[n/educator]).
+pred(person, 1,[n/person]).
+pred(explain, 1,[v/explain]).
 %pred(man,     1,[a/male,n/man]).
 %pred(woman,   1,[a/female,n/woman]).
 %pred(married, 1,[a/married]).
@@ -37,7 +36,7 @@ pred(bird,    1,[n/bird]).
 pred(penguin, 1,[n/penguin]).
 pred(sparrow, 1,[n/sparrow]).
 pred(fly,     1,[v/fly]).
-pred(expert, 1,[a/expert]).
+pred(academic, 1,[a/academic]).
 
 pred2gr(P,1,C/W,X=>Lit):-
 	pred(P,1,L),

@@ -88,8 +88,6 @@ def get_target_property(input_):
         is_are = re.findall(target_regex, input_)[0][1]
         target = re.findall(target_regex, input_)[0][0]
         property_ = re.findall(property_regex, input_)[0][-1]
-        #print('TARGET: ', target)
-        #print("LABEL: ", property_)
         description = target+' '+is_are+' '+property_
         return(target, property_, description)
 
@@ -103,7 +101,6 @@ def get_tags(tagger,text):
 def get_property_pos(target, property_, description):
     tags = get_tags(tagger, description)
     words_tags = dict(zip(description.split(' '), tags))
-    #print('WORD_TAGS: ', words_tags)
     return words_tags
     
 def update_knowledge(tagger, target, property_, description):
@@ -127,11 +124,8 @@ def update_knowledge(tagger, target, property_, description):
 def add_rules_knowledge(target, property_, common_sense_knowledge,
         lines_knowledge_store, lines_prolexa_rules):
     for rel, data in common_sense_knowledge.items():
-        #print('REL: ', rel)
         if rel == REL.IS_A.value:
-            #print('IS_A relation')
             for label in data:
-                #print('label: ', label)
                 complex_tag, content = get_complex_tag(label)
                 knowledge_store_updated, prolexa_rules_updated = generate_rule_knowledge(complex_tag, content, property_,
                         lines_knowledge_store, lines_prolexa_rules)

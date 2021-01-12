@@ -81,7 +81,6 @@ def standardised_query(pl, text):
 def get_tags(tagger, text):
     _, _, tags = tagger.tag(text)
     tags = standardise_tags(tags)
-    print('TAGS: ', tags)
     return tags
 
 def handle_noun(lines, i, text, tags):

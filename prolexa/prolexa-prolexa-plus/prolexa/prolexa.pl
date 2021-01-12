@@ -20,12 +20,10 @@
 
 %some intial stored rules
 stored_rule(1,[(mortal(X):-human(X))]).
-stored_rule(1,[(play(X):-doctor(X))]).
-stored_rule(1,[(scholar(X):-doctor(X))]).
-stored_rule(1,[(expert(X):-doctor(X))]).
-stored_rule(1,[(worker(X):-doctor(X))]).
-stored_rule(1,[(professional(X):-doctor(X))]).
-stored_rule(1,[(person(X):-doctor(X))]).
+stored_rule(1,[(abstraction(X):-teacher(X))]).
+stored_rule(1,[(educator(X):-teacher(X))]).
+stored_rule(1,[(person(X):-teacher(X))]).
+stored_rule(1,[(academic(X):-teacher(X))]).
 stored_rule(1,[(human(peter):-true)]).
 
 
