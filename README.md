@@ -1,3 +1,5 @@
+Authors: Oliver Deane and Kevin Nejad
+
 # Instructions
 In the prolexa-prolexa-plus directory:
 
