@@ -18,7 +18,7 @@ class REL(Enum):
     CAUSES_DESIRE = 'CausesDesire'
     MADE_OF = 'MadeOf'
 ```
-Currently, we only fetch the common sense knowledge pertaining to simple nouns (e.g. ...), but the code perimts the addition of adjectives, verbs, noun phrases etc. 
+Currently, we only fetch the common sense knowledge pertaining to simple nouns, but the code perimts the addition of adjectives, verbs, noun phrases etc. 
 
 Next, for each of these relations, we construct a prolog rule and update prolexa's stored rules file (prolexa.pl). 
 
@@ -42,7 +42,9 @@ Bill is a doctor?
 The presneted program would augment the common sense knowledge store of a given agent and help it reason a solution to this task - the agent would be able to complete the reaonsing task without requiring large amounts of new information from the input. 
 
 However, in order to access the natural language interface, we must define a grammar for each category of rules (e.g. has a.., capable of..., is a...). 
-While prolexa was already equipped to handle any "is a..." rule ("Peter is a teacher" for example), it was necessary to extend its grammar to allow it to take advantage of all knowledge provided by Conceptnet. For example, prolexa should handle such statements as "every doctor has a hammer" and "every teacher is capable of teaching". Having added these capabilities, Prolexa now understands such statements. However, the complexity of the relvent responses stored in conceptnet hinders its ability to fully process them and return reasoned responses. While the "is a..." example mostly contains simple noun words, other relations contain more complex grammatical structures such as "every teacher is capable of punishing a student". Thus, future projects should build upon this groundwork and insert more complex structures into Prolexa's grammer to ensure access to the entire knowledge database. Further, the next version should incoporate additional rules such as (at location, mad of..., used for...., etc.) to expand prolexa's common sense knowledge and thus aid the completion of more sophisticated reasoning tasks. 
+While prolexa was already equipped to handle any "is a..." rule ("Peter is a teacher" for example), it was necessary to extend its grammar to allow it to take advantage of all knowledge provided by Conceptnet. For example, prolexa should handle such statements as "every doctor has a hammer" and "every teacher is capable of teaching". 
+
+Having added these capabilities, Prolexa now understands such statements. However, the complexity of the relevent responses stored in conceptnet hinders its ability to fully process them and return reasoned responses. While the "is a..." example mostly contains simple noun words, other relations contain more complex grammatical structures such as "every teacher is capable of punishing a student". Thus, future projects should build upon this groundwork and insert more complex structures into Prolexa's grammer to ensure access to the entire knowledge database. Further, the next version should incoporate additional rules such as (at location, mad of..., used for...., etc.) to expand prolexa's common sense knowledge and thus aid the completion of more sophisticated reasoning tasks. 
 
 ### Example entry
 ```shell
