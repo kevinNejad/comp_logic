@@ -1,6 +1,6 @@
-We present an extended version of the prolexa_plus framework whereby functionality is augmented with the introduction of common sense reasoning though the aquisition of common sense knowledge. We connect Prolex Plus to [ConceptNet](http://conceptnet.io), a freely available large-scale commonsense knowledge base, which  provides prolexa with the necessary semantic knowledge to enable deeper and more meaningful understanding of textual information. Thus, ConceptNet empowers it to perform contextual common sense reasoning, positioning new information and rules in the context of stored knowledge.
+We present an extended version of the prolexa_plus framework whereby functionality is augmented with the introduction of common sense reasoning though the aquisition of common sense knowledge. We connect Prolex Plus to [ConceptNet](http://conceptnet.io), a freely available large-scale commonsense knowledge base, which  provides prolexa with the necessary semantic knowledge to enable deeper and more meaningful understanding of textual information. Thus, the involvement of ConceptNet aids the performance of contextual common sense reasoning, allowing ProlexPlus to position new information and rules in the context of stored knowledge.
 
-When a user inserts a statement, prolexa communicates with the external database and fetches additional knowledge based on the intput. For example, if it receives the utterance: "Helen is a doctor", it can access the concept database and summise that Helen is also a: "medic", a "person of science" and a "professional". 
+When a user inserts a statement, prolexa communicates with the external database and fetches additional knowledge based on the intput. For example, if it receives the utterance: "Helen is a doctor", it can access the concept database and automatically summise that Helen is also a: "medic", a "person of science" and a "professional". 
 Currently, the relationships that we achieve fall under the following classes:
 
 ```python
@@ -18,7 +18,7 @@ class REL(Enum):
     CAUSES_DESIRE = 'CausesDesire'
     MADE_OF = 'MadeOf'
 ```
-Currently, we only fetch the common sense knowledge pertaining to simple nouns, but the code perimts the addition of adjectives, verbs, noun phrases etc. 
+Currently, we only fetch the common sense knowledge pertaining to simple nouns, but the code permits the additional tags such tags such as grammatical forms such as adjectives, verbs, noun phrases etc. 
 
 Next, for each of these relations, we construct a prolog rule and update prolexa's stored rules file (prolexa.pl). 
 
