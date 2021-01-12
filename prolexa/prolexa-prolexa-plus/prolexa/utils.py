@@ -7,8 +7,6 @@ from nltk.stem import WordNetLemmatizer
 import string
 
 import os
-### Download en_core_web_sm
-os.system('python -m spacy download en_core_web_sm')
 
 import spacy
 import textacy
