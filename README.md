@@ -1,4 +1,15 @@
-We present an extended version of the prolexa_plus framework whereby functionality is augmented with the introduction of common sense reasoning though the aquisition of common sense knowledge. We connect Prolex Plus to [ConceptNet](http://conceptnet.io), a freely available large-scale commonsense knowledge base, which  provides prolexa with the necessary semantic knowledge to enable deeper and more meaningful understanding of textual information. Thus, the involvement of ConceptNet aids the performance of contextual common sense reasoning, allowing ProlexPlus to position new information and rules in the context of stored knowledge.
+# Instructions
+```shell
+pip install -r requirements.txt
+
+bash install_dependency.sh
+
+PYTHONPATH=./ python prolexa/prolexa_plus.py
+```
+
+# Prolexa KnowHow
+
+We present an extended version of the ProlexaPlus framework whereby functionality is augmented with the introduction of common sense reasoning though the aquisition of common sense knowledge. We connect Prolex Plus to [ConceptNet](http://conceptnet.io), a freely available large-scale commonsense knowledge base, which  provides prolexa with the necessary semantic knowledge to enable deeper and more meaningful understanding of textual information. Thus, the involvement of ConceptNet aids the performance of contextual common sense reasoning, allowing ProlexPlus to position new information and rules in the context of stored knowledge.
 
 When a user inserts a statement, prolexa communicates with the external database and fetches additional knowledge based on the intput. For example, if it receives the utterance: "Helen is a doctor", it can access the concept database and automatically summise that Helen is also a: "medic", a "person of science" and a "professional". 
 Currently, the relationships that we achieve fall under the following classes:
@@ -18,10 +29,9 @@ class REL(Enum):
     CAUSES_DESIRE = 'CausesDesire'
     MADE_OF = 'MadeOf'
 ```
-Currently, we only fetch the common sense knowledge pertaining to simple nouns, but the code permits the additional tags such tags such as grammatical forms such as adjectives, verbs, noun phrases etc. 
+At present, we only fetch the common sense knowledge pertaining to simple nouns, but the code permits the inclusion of additional  grammatical forms such as adjectives, verbs, noun phrases etc. 
 
-Next, for each of these relations, we construct a prolog rule and update prolexa's stored rules file (prolexa.pl). 
-
+For each of these relations, we construct a prolog rule and update prolexa's stored rules file (prolexa.pl). 
 The resulting functionality can be used to address the type of questions and riddles posed in the Allen Institute's [RuleTaker] (https://rule-reasoning.apps.allenai.org) model. For example: 
 
 ```
@@ -39,12 +49,12 @@ Bill is a doctor?
 
 (This can be shown via demonstration).
 ```
-The presneted program would augment the common sense knowledge store of a given agent and help it reason a solution to this task - the agent would be able to complete the reaonsing task without requiring large amounts of new information from the input. 
+The presented program would augment the common sense knowledge store of a given agent and help it reason a solution to this task - the agent would be able to complete the reaonsing task without requiring large amounts of new information from the input. 
 
 However, in order to access the natural language interface, we must define a grammar for each category of rules (e.g. has a.., capable of..., is a...). 
 While prolexa was already equipped to handle any "is a..." rule ("Peter is a teacher" for example), it was necessary to extend its grammar to allow it to take advantage of all knowledge provided by Conceptnet. For example, prolexa should handle such statements as "every doctor has a hammer" and "every teacher is capable of teaching". 
 
-Having added these capabilities, Prolexa now understands such statements. However, the complexity of the relevent responses stored in conceptnet hinders its ability to fully process them and return reasoned responses. While the "is a..." example mostly contains simple noun words, other relations contain more complex grammatical structures such as "every teacher is capable of punishing a student". Thus, future projects should build upon this groundwork and insert more complex structures into Prolexa's grammer to ensure access to the entire knowledge database. Further, the next version should incoporate additional rules such as (at location, mad of..., used for...., etc.) to expand prolexa's common sense knowledge and thus aid the completion of more sophisticated reasoning tasks. 
+However, while Prolexa now understands such statements, the complexity of the relevent responses stored in conceptnet hinders its ability to fully process them and return reasoned responses. While the "is a..." example mostly contains simple noun words, other relations contain more complex grammatical structures such as "every teacher is capable of punishing a student". Thus, future projects should build upon this groundwork and insert more complex structures into Prolexa's grammer to ensure access to the entire knowledge database. Further, the next version should incoporate additional rules such as (at location, made of..., used for...., etc.) to expand prolexa's common sense knowledge and thus aid the completion of more sophisticated reasoning tasks. 
 
 ### Example entry
 ```shell
