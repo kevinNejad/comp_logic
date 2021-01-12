@@ -1,7 +1,7 @@
 # Instructions
-```shell
-pip install -r requirements.txt
+In the prolexa-prolexa-plus directory:
 
+```shell
 bash install_dependency.sh
 
 PYTHONPATH=./ python prolexa/prolexa_plus.py
