@@ -59,6 +59,7 @@ sentence1([(L:-true)]) --> proper_noun(N,X),verb_phrase(N,X=>L).
 
 verb_phrase(s,M) --> [is],property(s,M).
 verb_phrase(p,M) --> [are],property(p,M).
+verb_phrase(_N,M) --> [can],iverb(p,M).
 verb_phrase(N,M) --> iverb(N,M).
 
 
