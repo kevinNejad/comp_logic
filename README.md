@@ -39,6 +39,53 @@ Bill is a doctor?
 (This can be shown via demonstration).
 
 
-While prolexa can handle any rule with the prefix "is a type of...", it was necessary to also extend its grammar to permit it to take advantage of all knowledge provided by Conceptnet. For example, prolexa should handle such statements as "every doctor has a hammer" and "every teacher is is capable of teaching". Prolexa now understands such statements, however the complexity of the responses stored in conceptnet hinders its ability to fully process them and return reasoned responses. Thus, future work should insert more complex structures into Prolexa's grammer to ensure access to the entire knowledge database. 
+While prolexa can handle any rule with the prefix "is a type of...", it was necessary to also extend its grammar to permit it to take advantage of all knowledge provided by Conceptnet. For example, prolexa should handle such statements as "every doctor has a hammer" and "every teacher is is capable of teaching". Prolexa now understands such statements, however the complexity of the responses stored in conceptnet hinders its ability to fully process them and return reasoned responses. 
+
+Thus, future work should insert more complex structures into Prolexa's grammer to ensure access to the entire knowledge database. The next version should incoporate additional rules such as (at location, mad of..., used for...., etc.). 
+
+### Example entry
+```shell
+> tell me about peter 
+*** utterance(tell me about peter)
+*** goal(all_answers(peter,_37958))
+*** answer(peter is human. peter is mortal)
+peter is human. peter is mortal
+
+> peter is a teacher 
+*** utterance(peter is a teacher)
+*** rule([(teacher(peter):-true)])
+*** answer(I will remember that peter is a teacher)
+*** answer(I heard you say,  peter is a teacher , could you rephrase that please?)
+Acquiring common sense knowledge ...
+Rules were added successfully!
+I will remember that peter is a teacher
+I have also discovered more knowledge about peter
+
+[3:29 PM] Kevin Kermani Nejad
+> tell me about peter 
+*** utterance(tell me about peter)
+*** goal(all_answers(peter,_37958))
+*** answer(peter is human. peter is mortal)
+peter is human. peter is mortal
+
+> peter is a teacher 
+*** utterance(peter is a teacher)
+*** rule([(teacher(peter):-true)])
+*** answer(I will remember that peter is a teacher)
+*** answer(I heard you say,  peter is a teacher , could you rephrase that please?)
+Acquiring common sense knowledge ...
+Rules were added successfully!
+I will remember that peter is a teacher
+I have also discovered more knowledge about peter
+
+> explain why peter is a educator 
+*** utterance(explain why peter is a educator)
+*** goal(explain_question(educator(peter),_54722,_54466))
+*** answer(peter is a teacher; every teacher is a educator; therefore peter is a educator)
+peter is a teacher; every teacher is a educator; therefore peter is a educator
+```
+
+
+
 
 
